@@ -1,0 +1,70 @@
+const lagrangeInterpolation = (points) => {
+    const k = points.length;
+    let constant = 0;
+
+    for (let i = 0; i < k; i++) {
+        let xi = points[i][0];
+        let yi = points[i][1];
+        let term = yi;
+
+        for (let j = 0; j < k; j++) {
+            if (i !== j) {
+                let xj = points[j][0];
+                term *= (0 - xj) / (xi - xj);
+            }
+        }
+
+        constant += term;
+    }
+
+    return constant;
+};
+
+const decodeValue = (value, base) => {
+    return parseInt(value, base);
+};
+
+const findConstantTerm = (input) => {
+    const keys = input.keys;
+    const n = keys.n;
+    const k = keys.k;
+
+    let points = [];
+    for (let i = 1; i <= n; i++) {
+        if (input[i]) {
+            let x = parseInt(i);
+            let base = parseInt(input[i].base);
+            let y = decodeValue(input[i].value, base);
+            points.push([x, y]);
+        }
+    }
+
+    points = points.slice(0, k);
+    const constant = lagrangeInterpolation(points);
+    console.log(constant);
+};
+
+const input = {
+    "keys": {
+        "n": 4,
+        "k": 3
+    },
+    "1": {
+        "base": "10",
+        "value": "4"
+    },
+    "2": {
+        "base": "2",
+        "value": "111"
+    },
+    "3": {
+        "base": "10",
+        "value": "12"
+    },
+    "6": {
+        "base": "4",
+        "value": "213"
+    }
+};
+
+findConstantTerm(input);
